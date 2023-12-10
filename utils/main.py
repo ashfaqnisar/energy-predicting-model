@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from pandas import DataFrame
+
 
 # Determine the season of a given date based on the indian timezone
 # Input: datetime.date object
@@ -22,8 +24,6 @@ def determine_season(date: datetime.date) -> str:
         raise ValueError("Invalid date")
 
 
-
-
 def determine_time_of_day(date: datetime.date) -> str:
     if 6 <= date.hour <= 11:
         return "morning"
@@ -38,3 +38,18 @@ def determine_time_of_day(date: datetime.date) -> str:
     else:
         # Throw error if invalid date
         raise ValueError("Invalid date")
+
+
+def save_dataframe_in_csv(
+        data_to_save: DataFrame,
+        file_name: str,
+        data_path=("data/" + datetime.now().strftime("%Y-%m-%d-%H-%M-%S"))
+):
+    # Store the data in a CSV file with the timestamp in the name of the file and create the filePath if not exists
+    import os
+    data_path = data_path + "/"
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
+
+    file_path = data_path + file_name + ".csv"
+    data_to_save.to_csv(file_path, index=False)

@@ -13,7 +13,7 @@ def add_minimum_randomness_to_base_power_rating(value, noise_level=0.03):
     return max(0, value + noise)  # Ensure the final value is not negative
 
 
-# Begin from the start timestamp like 00:00 of the provided date and generate data for the next 24 hours
+# Function to generate data based on the number of days and the start timestamp
 def generate_data_based_on_days(start_timestamp=datetime.now(), days=24) -> DataFrame:
     data = []
     energy_points = days * 24  # 24 points per day
@@ -42,23 +42,34 @@ def generate_data_based_on_days(start_timestamp=datetime.now(), days=24) -> Data
                 weekday_factors[weekday_or_weekend])
 
         # Add random noise to the power consumption
-        power_consumption = add_minimum_randomness_to_base_power_rating(base_consumption)
+        energy_consumption = add_minimum_randomness_to_base_power_rating(base_consumption)
 
         # Append the data to the dataframe
         data.append({
             "timestamp": timestamp,
+            "hour": timestamp.hour,
+            "day_of_week": timestamp.weekday(),
+            "month": timestamp.month,
             "season": season,
             "time_of_day": time_of_day,
-            "weekday_or_weekend": weekday_or_weekend,
-            "base_consumption": base_consumption,
-            "noise": power_consumption - base_consumption,
-            "power_consumption": power_consumption
+            "is_weekend": weekday_or_weekend == "weekend",
+            # "base_consumption": base_consumption,
+            # "noise": energy_consumption - base_consumption,
+            "energy_consumption": energy_consumption
         })
     return pd.DataFrame(data)
 
 
-generated_days = 365
-save_dataframe_in_csv(
-    generate_data_based_on_days(days=generated_days), str(generated_days)
-    , "data"
-)
+required_days = 365 * 5
+generated_data = generate_data_based_on_days(days=required_days)
+
+# Split the data into train and test data
+split_ratio = 0.8
+split_index = int(len(generated_data) * split_ratio)
+
+training_data = generated_data.iloc[:split_index]
+testing_data = generated_data.iloc[split_index:]
+
+save_dataframe_in_csv(generated_data, "generated_data", "data/" + str(required_days))
+save_dataframe_in_csv(training_data, "training_data", "data/" + str(required_days))
+save_dataframe_in_csv(testing_data, "testing_data", "data/" + str(required_days))
