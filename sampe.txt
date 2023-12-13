@@ -1,0 +1,55 @@
+
+# from flask_cors import CORS
+# from flask_restful import Resource, Api
+# from flask_sqlalchemy import SQLAlchemy
+# from sqlalchemy import create_engine
+# from json import dumps
+# from flask_jsonpify import jsonify
+# from flask import Flask, render_template, request
+# from datetime import datetime
+# import json
+# import pandas as pd
+# import numpy as np
+# import pickle
+# import os
+# import random
+# from datetime import datetime, timedelta
+#
+# import pandas as pd
+# from pandas import DataFrame
+#
+# from utils import determine_season, determine_time_of_day, save_dataframe_in_csv
+#
+# # Function to add random noise
+# def add_minimum_randomness_to_base_power_rating(value, noise_level=0.03):
+
+
+
+# Creating/ Re-training a model for the device Function
+1. Which Device Id, Check the device is present in the database or not
+2. If present, then get all of the energy data of that device.
+3. Split the data into train and test.
+3. Create the model based on the train data.
+4. Predict the test data.
+5. Calculate the accuracy of the model.
+6. Store the model in the google cloud
+    --devices/device_id/models/model_id
+7. Store all the details of the model in the database.
+--devices
+    --device_id
+        --models
+            --model_id
+            --accuracy
+            --link: "gs://energy-prediction/models/model_id"
+        --device_info
+        --current_model: model_id
+    --device_id_2
+
+# Predicting the energy consumption of the device
+1. Which Device Id, Check the device is present in the database or not
+2. Check if the device has the model or not, if not then throw an error.
+3. If it does have a model with the model id then fetch the model from the database.
+4. Get the model from the google cloud based on the link.
+5. Process the data for the model.
+6. Predict the energy consumption of the device.
+7. Return the predicted energy consumption of the device.
